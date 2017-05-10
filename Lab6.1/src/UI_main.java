@@ -13,6 +13,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class UI_main {
 
