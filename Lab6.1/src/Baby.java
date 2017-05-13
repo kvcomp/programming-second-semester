@@ -27,10 +27,15 @@ public class Baby implements Walker, Watcher {
 			return "false";
 		}
 	}
+	
+	public String getAge() {
+		String stringAge = String.valueOf(this.Age);
+		return stringAge;
+	}
 
 	public String getSex() {
 		return this.Sex;
-	}
+	}	
 
 	@Override
 	public void watch() {
@@ -44,13 +49,8 @@ public class Baby implements Walker, Watcher {
 	}
 
 	public String toCSV() {
-        String s = this.getName() + "," + this.getFree() + "," + this.getSex();
+        String s = this.getName() + "," + this.getFree() + "," + this.getSex()+ "," + this.getAge();
         return s;
-    }
-	
-	@Override
-    public String toString() {
-        return Name;
     }
 	
 	@Override
