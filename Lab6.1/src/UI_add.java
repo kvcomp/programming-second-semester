@@ -1,38 +1,40 @@
+import java.util.*;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Scale;
-import org.eclipse.swt.events.TouchListener;
-import org.eclipse.swt.events.TouchEvent;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.widgets.Composite;
 
 public class UI_add extends Shell {
 	private Text text;
-	private Text text_age;
 	private Scale scale;
+	protected static boolean isWorking = false;
+	public static UI_add shell;
 
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main() {
+		isWorking = true;
 		try {
 			Display display = Display.getDefault();
-			UI_add shell = new UI_add(display);
+			shell = new UI_add(display);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
+					isWorking = false;
 				}
 			}
 		} catch (Exception e) {
@@ -74,33 +76,17 @@ public class UI_add extends Shell {
 		lblFree.setBounds(145, 62, 70, 20);
 		lblFree.setText("Free:");
 		
-		Button btnTrue = new Button(this, SWT.RADIO);
-		btnTrue.setBounds(145, 88, 57, 20);
-		btnTrue.setText("True");
-		
-		Button btnFalse = new Button(this, SWT.RADIO);
-		btnFalse.setBounds(208, 88, 57, 20);
-		btnFalse.setText("False");
-		
 		Label lblSex = new Label(this, SWT.NONE);
 		lblSex.setBounds(145, 114, 70, 20);
 		lblSex.setText("Sex");
 		
-		Button btnMale = new Button(this, SWT.RADIO);
-		btnMale.setBounds(145, 140, 57, 20);
-		btnMale.setText("Male");
-		
-		Button btnFemale = new Button(this, SWT.RADIO);
-		btnFemale.setBounds(208, 140, 72, 20);
-		btnFemale.setText("Female");
-		
-		Button btnDoubt = new Button(this, SWT.RADIO);
-		btnDoubt.setBounds(286, 140, 66, 20);
-		btnDoubt.setText("Doubt");
-		
 		Label lblAge = new Label(this, SWT.NONE);
 		lblAge.setBounds(145, 175, 33, 20);
 		lblAge.setText("Age:");
+		
+		Label text_age = new Label(this, SWT.NONE);
+		text_age.setBounds(184, 175, 70, 20);
+		text_age.setText("0");
 		
 		scale = new Scale(this, SWT.NONE);
 		scale.addSelectionListener(new SelectionAdapter() {
@@ -113,26 +99,88 @@ public class UI_add extends Shell {
 		scale.setBounds(142, 201, 220, 48);
 		
 		Button btnCancel = new Button(this, SWT.NONE);
+		btnCancel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				shell.close();
+			}
+		});
 		btnCancel.setBounds(10, 170, 90, 30);
 		btnCancel.setText("Cancel");
+		
+		Composite composite = new Composite(this, SWT.NONE);
+		composite.setBounds(128, 140, 224, 21);
+		
+		Button btnMale = new Button(composite, SWT.RADIO);
+		btnMale.setBounds(12, 0, 57, 20);
+		btnMale.setText("Male");
+		
+		Button btnFemale = new Button(composite, SWT.RADIO);
+		btnFemale.setBounds(75, 0, 72, 20);
+		btnFemale.setText("Female");
+		
+		Button btnDoubt = new Button(composite, SWT.RADIO);
+		btnDoubt.setBounds(153, 0, 66, 20);
+		btnDoubt.setText("Doubt");
+		
+		Composite composite_1 = new Composite(this, SWT.NONE);
+		composite_1.setBounds(127, 88, 225, 20);
+		
+		Button btnTrue = new Button(composite_1, SWT.RADIO);
+		btnTrue.setBounds(10, 0, 57, 20);
+		btnTrue.setText("True");
+		
+		Button btnFalse = new Button(composite_1, SWT.RADIO);
+		btnFalse.setBounds(73, 0, 57, 20);
+		btnFalse.setText("False");
 		
 		Button btnAccept = new Button(this, SWT.NONE);
 		btnAccept.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (text.getText().isEmpty()) {
+					UI_warning.setWarning("Name can not be empty");
+					UI_warning.main();
+				} else if (btnTrue.getSelection() == btnFalse.getSelection()) {
+					UI_warning.setWarning("'Free' field can not be empty");
+					UI_warning.main();
+				} else if (btnMale.getSelection() == btnFemale.getSelection() && btnMale.getSelection() == btnDoubt.getSelection()){
+					UI_warning.setWarning("'Sex' field can not be empty");
+					UI_warning.main();
+				} else {
+					String sex;
+					if (btnMale.getSelection()) {
+						sex = new String("male");
+					} else if (btnFemale.getSelection()) {
+						sex = new String("female");
+					} else sex = new String ("doubt");
+					Baby baby = new Baby(text.getText(), btnTrue.getSelection() == true, sex, scale.getSelection());
+					LinkedList<Baby> cur = new LinkedList<Baby> (UI_main.myList);
+					cur.sort(new Comparator<Baby>() {
+                        public int compare(Baby b1, Baby b2) {
+                            return b1.compareTo(b2);
+                        }
+                    });
+					Boolean isMax = cur.isEmpty()?true:(baby.compareTo(cur.getLast()) > 0);
+					Boolean isMin = cur.isEmpty()?true:(baby.compareTo(cur.getFirst()) < 0);
+					if (!btnAdd.getSelection() && !btnAddIfMax.getSelection() && !btnAddIfMin.getSelection()) {
+						UI_warning.setWarning("Select type");
+						UI_warning.main();
+					} else if (btnAdd.getSelection() && !btnAddIfMax.getSelection() && !btnAddIfMin.getSelection()) {
+						UI_main.myList.add(baby);
+					} else if (!btnAddIfMax.getSelection() && btnAddIfMin.getSelection() && isMin) {
+						UI_main.myList.addFirst(baby);
+					} else if (btnAddIfMax.getSelection() && !btnAddIfMin.getSelection() && isMax) {
+						UI_main.myList.addLast(baby);
+					} else if (btnAddIfMax.getSelection() && btnAddIfMin.getSelection() && isMax && isMin) {
+						UI_main.myList.add(baby);
+					}
+					UI_main.refresh();
+				}
 			}
 		});
 		btnAccept.setText("Accept");
 		btnAccept.setBounds(10, 213, 90, 30);
-		
-		text_age = new Text(this, SWT.BORDER);
-		text_age.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent arg0) {
-				scale.setSelection(Integer.parseInt(text_age.getText()));
-			}
-		});
-		text_age.setText("0");
-		text_age.setBounds(184, 175, 38, 26);
 		
 		createContents();
 	}

@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Button;
 
-public class UI_remove extends Shell {
+public class UI_update extends Shell {
 	protected static Table table;
 	protected static boolean isWorking = false;
 
@@ -27,20 +27,18 @@ public class UI_remove extends Shell {
 	 * Launch the application.
 	 * @param args
 	 */
-	public static UI_remove shell;
+	public static UI_update shell;
 	
 	public static void main() {
 		isWorking = true;
 		try {
 			Display display = Display.getDefault();
-			shell = new UI_remove(display);
+			shell = new UI_update(display);
 			shell.open();
-			
 			shell.layout();
 			while (!shell.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
-					
 				}
 			}
 		} catch (Exception e) {
@@ -53,15 +51,15 @@ public class UI_remove extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public UI_remove(Display display) {
+	public UI_update(Display display) {
 		super(display, SWT.SHELL_TRIM);
 		
 		Label lblName = new Label(this, SWT.NONE);
-		lblName.setBounds(417, 10, 70, 20);
+		lblName.setBounds(277, 12, 70, 20);
 		lblName.setText("Name:");
 		
 		Composite composite = new Composite(this, SWT.NONE);
-		composite.setBounds(418, 140, 224, 21);
+		composite.setBounds(277, 140, 224, 21);
 		
 		Button btnMale = new Button(composite, SWT.RADIO);
 		btnMale.setSelection(true);
@@ -77,10 +75,10 @@ public class UI_remove extends Shell {
 		btnDoubt.setText("Doubt");
 		
 		Text text = new Text(this, SWT.BORDER);
-		text.setBounds(417, 36, 207, 26);
+		text.setBounds(280, 38, 207, 26);
 		
 		Composite composite_1 = new Composite(this, SWT.NONE);
-		composite_1.setBounds(417, 88, 225, 20);
+		composite_1.setBounds(276, 90, 225, 20);
 		
 		Button btnTrue = new Button(composite_1, SWT.RADIO);
 		btnTrue.setSelection(true);
@@ -88,7 +86,7 @@ public class UI_remove extends Shell {
 		btnTrue.setText("True");
 		
 		Label text_age = new Label(this, SWT.NONE);
-		text_age.setBounds(468, 166, 70, 20);
+		text_age.setBounds(316, 166, 70, 20);
 		text_age.setText("0");
 		
 		Button btnFalse = new Button(composite_1, SWT.RADIO);
@@ -102,81 +100,18 @@ public class UI_remove extends Shell {
 			}
 		});
 		scale.setMaximum(75);
-		scale.setBounds(422, 192, 220, 48);
-		
-		Button btnRemove = new Button(this, SWT.NONE);
-		btnRemove.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String sex;
-				if (btnMale.getSelection()) {
-					sex = new String("male");
-				} else if (btnFemale.getSelection()) {
-					sex = new String("female");
-				} else sex = new String ("doubt");
-				
-				Baby baby = new Baby(text.getText(), btnTrue.getSelection() == true, sex, scale.getSelection());
-				ListIterator<Baby> it = UI_main.myList.listIterator();
-                boolean checkCritearia = false;
-                while (it.hasNext()) {
-                    if (baby.compareTo(it.next()) == 0) {
-                        it.remove();
-                        checkCritearia = true;
-                        UI_main.refresh();
-                        break;
-                    }
-                }
-				if (!checkCritearia) {
-					UI_warning.setWarning("Element not found");
-					UI_warning.main();
-				}
-			}
-		});
-		btnRemove.setBounds(521, 246, 121, 26);
-		btnRemove.setText("Remove selected");
-		
-		Button btnRemoveAll = new Button(this, SWT.NONE);
-		btnRemoveAll.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				table.removeAll();
-				UI_main.myList.clear();
-				UI_main.refresh();
-			}
-		});
-		btnRemoveAll.setBounds(281, 39, 128, 23);
-		btnRemoveAll.setText("Remove all");
-		
-		Button btnRemoveLast = new Button(this, SWT.CHECK);
-		btnRemoveLast.setBounds(281, 88, 111, 20);
-		btnRemoveLast.setText("remove last");
-		
-		Button btnRemoveFirst = new Button(this, SWT.CHECK);
-		btnRemoveFirst.setBounds(281, 114, 111, 20);
-		btnRemoveFirst.setText("remove first");
-		
-		Button btnRemoveLower = new Button(this, SWT.CHECK);
-		btnRemoveLower.setBounds(281, 140, 111, 20);
-		btnRemoveLower.setText("remove lower");
-		
-		Button btnRemoveGreater = new Button(this, SWT.CHECK);
-		btnRemoveGreater.setBounds(281, 166, 126, 20);
-		btnRemoveGreater.setText("remove greater");
-		
-		Label lblNewLabel = new Label(this, SWT.NONE);
-		lblNewLabel.setBounds(281, 10, 70, 20);
-		lblNewLabel.setText("Type:");
+		scale.setBounds(277, 193, 220, 48);
 		
 		Label lblFree = new Label(this, SWT.NONE);
-		lblFree.setBounds(417, 62, 70, 20);
+		lblFree.setBounds(277, 64, 70, 20);
 		lblFree.setText("Free:");
 		
 		Label lblSex = new Label(this, SWT.NONE);
-		lblSex.setBounds(417, 114, 70, 20);
+		lblSex.setBounds(277, 116, 70, 20);
 		lblSex.setText("Sex");
 		
 		Label lblAge = new Label(this, SWT.NONE);
-		lblAge.setBounds(417, 166, 33, 20);
+		lblAge.setBounds(277, 166, 33, 20);
 		lblAge.setText("Age:");
 		
 		Button btnCancel = new Button(this, SWT.NONE);
@@ -186,55 +121,40 @@ public class UI_remove extends Shell {
 				shell.close();
 			}
 		});
-		btnCancel.setBounds(448, 285, 90, 30);
+		btnCancel.setBounds(316, 247, 90, 30);
 		btnCancel.setText("Cancel");
 		
 		Button btnAccept = new Button(this, SWT.NONE);
 		btnAccept.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (btnRemoveFirst.getSelection() && !UI_main.myList.isEmpty()) {
-					UI_main.myList.removeFirst();
+				if (table.getSelectionCount() == 0) {
+					UI_warning.setWarning("Choose item in table");
+					UI_warning.main();
+				} else {
+					String sex;
+					if (btnMale.getSelection()) {
+						sex = new String("male");
+					} else if (btnFemale.getSelection()) {
+						sex = new String("female");
+					} else sex = new String ("doubt");
+					Baby baby = new Baby(text.getText(), btnTrue.getSelection() == true, sex, scale.getSelection());
+					UI_main.myList.set(table.getSelectionIndex(), baby);
+					table.removeAll();
+					for (int i = 0; i < UI_main.myList.size(); i++) {
+						TableItem item = new TableItem(table, SWT.NONE);
+						item.setText(0, UI_main.myList.get(i).getName());
+						item.setText(1, UI_main.myList.get(i).getFree());
+						item.setText(2, UI_main.myList.get(i).getSex());
+						item.setText(3, UI_main.myList.get(i).getAge());
+					}
 				}
-				if (btnRemoveLast.getSelection() && !UI_main.myList.isEmpty()) {
-					UI_main.myList.removeLast();
-				}
-				String sex;
-				if (btnMale.getSelection()) {
-					sex = new String("male");
-				} else if (btnFemale.getSelection()) {
-					sex = new String("female");
-				} else sex = new String ("doubt");
-				Baby baby = new Baby(text.getText(), btnTrue.getSelection() == true, sex, scale.getSelection());
-				if (btnRemoveLower.getSelection() && !UI_main.myList.isEmpty()) {
-					ListIterator<Baby> it = UI_main.myList.listIterator();
-	                while (it.hasNext()) {
-	                    if (baby.compareTo(it.next()) > 0) {
-	                        it.remove();
-	                    }
-	                }
-				}
-				if (btnRemoveGreater.getSelection() && !UI_main.myList.isEmpty()) {
-					ListIterator<Baby> it = UI_main.myList.listIterator();
-	                while (it.hasNext()) {
-	                    if (baby.compareTo(it.next()) < 0) {
-	                        it.remove();
-	                    }
-	                }
-				}
-				table.removeAll();
-    			for (int i = 0; i < UI_main.myList.size(); i++) {
-    				TableItem item = new TableItem(table, SWT.NONE);
-    				item.setText(0, UI_main.myList.get(i).getName());
-    				item.setText(1, UI_main.myList.get(i).getFree());
-    				item.setText(2, UI_main.myList.get(i).getSex());
-    				item.setText(3, UI_main.myList.get(i).getAge());
-    			}
-    			UI_main.refresh();
+				UI_main.refresh();
 			}
 		});
 		btnAccept.setText("Accept");
-		btnAccept.setBounds(552, 285, 90, 30);
+		btnAccept.setBounds(411, 247, 90, 30);
 		
 		table = new Table(this, SWT.BORDER | SWT.FULL_SELECTION);
 		table.addSelectionListener(new SelectionAdapter() {
@@ -268,7 +188,7 @@ public class UI_remove extends Shell {
 				//text_age.setText(Integer.toString(table.getSelectionIndex()));
 			}
 		});
-		table.setBounds(10, 12, 251, 303);
+		table.setBounds(10, 12, 251, 265);
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -300,8 +220,8 @@ public class UI_remove extends Shell {
 	 * Create contents of the shell.
 	 */
 	protected void createContents() {
-		setText("Remove");
-		setSize(685, 372);
+		setText("Update");
+		setSize(529, 329);
 
 	}
 
