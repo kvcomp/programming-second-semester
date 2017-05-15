@@ -34,7 +34,7 @@ public class Baby implements Walker, Watcher {
 	}
 
 	public String getSex() {
-		return this.Sex;
+		return Sex;
 	}	
 
 	@Override
