@@ -118,21 +118,40 @@ public class UI_main {
 
 		Composite composite_2 = new Composite(shell, SWT.NONE);
 		FormData fd_composite_2 = new FormData();
-		fd_composite_2.right = new FormAttachment(0, 182);
+		fd_composite_2.right = new FormAttachment(0, 125);
 		fd_composite_2.top = new FormAttachment(0);
 		fd_composite_2.bottom = new FormAttachment(0, 23);
 		composite_2.setLayoutData(fd_composite_2);
 
 		ToolBar toolBar = new ToolBar(composite_2, SWT.FLAT | SWT.RIGHT);
-		toolBar.setBounds(0, 0, 152, 23);
+		toolBar.setBounds(0, 0, 115, 23);
 
 		ToolItem tltmSave = new ToolItem(toolBar, SWT.PUSH);
+		tltmSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Writer outThread = new Writer("out.csv");
+				outThread.start();
+				do {
+					try {
+						outThread.join();
+					} catch (InterruptedException ex) {
+					}
+				} while (outThread.isAlive());
+				if (outThread.getSuccess()) {
+					shell.setEnabled(false);
+					UI_notification.setNotification("Collection has been succefully saved");
+					UI_notification.main();
+				}
+			}
+		});
 		tltmSave.setText("Save");
 
 		ToolItem tltmLoad = new ToolItem(toolBar, SWT.PUSH);
 		tltmLoad.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				myList.clear();
 				Reader inThread = new Reader("in.csv");
 				inThread.start();
 				do {
@@ -145,13 +164,7 @@ public class UI_main {
 					UI_main.shell.setEnabled(false);
 					UI_notification.setNotification("Collection has been succefully reloaded from file");
 					UI_notification.main();
-					shell.close();
-					try {
-						UI_main window = new UI_main();
-						window.open();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+					refresh();
 				}
 			}
 		});
@@ -169,9 +182,6 @@ public class UI_main {
 			}
 		});
 		tltmInfo.setText("Info");
-
-		ToolItem tltmHelp = new ToolItem(toolBar, SWT.PUSH);
-		tltmHelp.setText("Help");
 
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		fd_composite_2.left = new FormAttachment(composite_1, 0, SWT.LEFT);
@@ -219,7 +229,9 @@ public class UI_main {
 				dialog.setFileName("import.csv");
 				try {
 					String impPath = dialog.open();
-					if (impPath == null) {return;}
+					if (impPath == null) {
+						return;
+					}
 					Reader impThread = new Reader(impPath);
 					impThread.start();
 					do {
@@ -228,7 +240,8 @@ public class UI_main {
 						} catch (InterruptedException ex) {
 						}
 					} while (impThread.isAlive());
-				} catch (Exception ex) {}
+				} catch (Exception ex) {
+				}
 				refresh();
 			}
 		});
